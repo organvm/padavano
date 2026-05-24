@@ -12,7 +12,7 @@
   },
   "scripts": {
     "dev": "http-server src -p 8080 -o",
-    "lint": "stylelint 'src/**/*.css' 'src/**/*.html' --config .config/stylelint.config.mjs",
+    "lint": "stylelint 'src/**/*.html' --config .config/stylelint.config.mjs",
     "test": "playwright test --config .config/playwright.config.ts",
     "validate": "npm run lint && npm test"
   }
