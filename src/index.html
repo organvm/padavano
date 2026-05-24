@@ -306,9 +306,7 @@
 </head>
 <body>
 
-<div id="scroll-progress" aria-hidden="true"></div>
 <div id="ui-grid"></div>
-<div role="presentation" aria-hidden="true"><canvas id="protocol-canvas"></canvas></div>
 
 <nav id="navigation-bar">
   <a href="#hero" class="nav-tab active">Home</a>
@@ -479,10 +477,10 @@
     <h2>Let's Build.</h2>
     <p class="lead">Tell me what you need. I'll tell you what it takes.</p>
 
-    <form class="access-form">
-      <input type="text" placeholder="Name / Organization" class="form-input" required aria-label="Name or Organization">
-      <input type="email" placeholder="Email Address" class="form-input" required aria-label="Email Address">
-      <input type="text" placeholder="What do you need built?" class="form-input" aria-label="Project Description">
+    <form class="access-form" id="access-form">
+      <input type="text" name="name" placeholder="Name / Organization" class="form-input" required aria-label="Name or Organization">
+      <input type="email" name="email" placeholder="Email Address" class="form-input" required aria-label="Email Address">
+      <input type="text" name="project" placeholder="What do you need built?" class="form-input" aria-label="Project Description">
       <button type="submit" class="action-btn submit-btn">Send</button>
     </form>
   </section>
@@ -494,6 +492,22 @@
 </footer>
 
 <script>
+  // Contact Form: compose a mailto with the submitted fields (no backend).
+  const accessForm = document.getElementById('access-form');
+  if (accessForm) {
+    accessForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = new FormData(accessForm);
+      const name = (data.get('name') || '').toString().trim();
+      const email = (data.get('email') || '').toString().trim();
+      const project = (data.get('project') || '').toString().trim();
+      const subject = `Project inquiry${name ? ' — ' + name : ''}`;
+      const body = `Name / Organization: ${name}\nEmail: ${email}\n\nWhat do you need built?\n${project}`;
+      window.location.href =
+        `mailto:padavano.anthony@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    });
+  }
+
   // Disclosure Logic
   document.querySelectorAll('.disclosure-trigger').forEach(trigger => {
     trigger.addEventListener('click', () => {
