@@ -22,4 +22,16 @@ test.describe('Navigation Link Integrity', () => {
       await expect(page).toHaveURL(new RegExp(`#${s}`));
     }
   });
+
+  test('domains section should map active nav state to work', async ({ page }) => {
+    await page.goto('/#domains');
+    await page.waitForFunction(() => document.querySelector('.nav-tab.active')?.getAttribute('href') === '#archive');
+    await expect(page.locator('.nav-tab.active')).toHaveAttribute('href', '#archive');
+  });
+
+  test('access section should clear active nav state', async ({ page }) => {
+    await page.goto('/#access');
+    await page.waitForFunction(() => document.querySelectorAll('.nav-tab.active').length === 0);
+    await expect(page.locator('.nav-tab.active')).toHaveCount(0);
+  });
 });
