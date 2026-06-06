@@ -575,17 +575,21 @@
     threshold: 0.5
   };
 
+  // Some sections have no nav tab of their own. Alias them to the tab that
+  // governs them (Domains elaborates Work) so the highlight stays meaningful.
+  // Anything unmapped clears the active state — better to show no tab than a
+  // stale/wrong one, e.g. when a visitor deep-links straight to #access.
+  const NAV_ALIASES = { domains: 'archive' };
+
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const id = entry.target.getAttribute('id');
-        const targetLink = document.querySelector(`.nav-tab[href="#${id}"]`);
-        // Only shift the active state when a tab maps to this section, so
-        // tab-less sections (#domains, #access) keep the prior tab lit.
-        if (targetLink) {
-          document.querySelectorAll('.nav-tab').forEach(link => link.classList.remove('active'));
-          targetLink.classList.add('active');
-        }
+      if (!entry.isIntersecting) return;
+      const id = entry.target.getAttribute('id');
+      const targetId = NAV_ALIASES[id] || id;
+      const targetLink = document.querySelector(`.nav-tab[href="#${targetId}"]`);
+      document.querySelectorAll('.nav-tab').forEach(link => link.classList.remove('active'));
+      if (targetLink) {
+        targetLink.classList.add('active');
       }
     });
   }, observerOptions);
